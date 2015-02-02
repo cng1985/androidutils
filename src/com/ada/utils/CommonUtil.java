@@ -17,6 +17,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -31,6 +32,7 @@ import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -276,6 +278,27 @@ public class CommonUtil {
 
 			return "";
 		}
+	}
+     /**
+      *   获取设置的唯一id  如果没有随机产生一串字符，程序不卸载一直存在
+      * @param context
+      * @return
+      */
+	public static String getAndroidID(Context context) {
+		String androidId = Settings.Secure.getString(
+				context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		Log.i("ada", "" + androidId);
+		if (androidId == null) {
+			SharedPreferences sharedPreferences = context.getSharedPreferences(
+					"setting", Context.MODE_PRIVATE);
+			String id = sharedPreferences.getString("id",null);
+			if(id==null){
+				id=UUID.randomUUID().toString().replace("-", "").toLowerCase();
+				sharedPreferences.edit().putString("id", id).commit();
+			}
+			androidId=id;
+		}
+		return androidId;
 	}
 
 	/**
@@ -544,6 +567,7 @@ public class CommonUtil {
 		}
 		return isinstall;
 	}
+
 	/**
 	 * 系统中所有安装过的软件
 	 * 
@@ -551,15 +575,16 @@ public class CommonUtil {
 	 * @param name
 	 */
 	public static void isinstallSoftware1(Context context, String name) {
-		  final PackageManager packageManager = context.getPackageManager();//获取packagemanager 
-	        List< PackageInfo> pinfo = packageManager.getInstalledPackages(0);//获取所有已安装程序的包信息 
-	            if(pinfo != null){ 
-	            for(int i = 0; i < pinfo.size(); i++){ 
-	                String packName = pinfo.get(i).packageName; 
-	                Log.d("info", "-->"+packName);
-	            } 
-	        } 
+		final PackageManager packageManager = context.getPackageManager();// 获取packagemanager
+		List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+		if (pinfo != null) {
+			for (int i = 0; i < pinfo.size(); i++) {
+				String packName = pinfo.get(i).packageName;
+				Log.d("info", "-->" + packName);
+			}
+		}
 	}
+
 	/**
 	 * 判断程序是否安装到SD卡上
 	 * 
