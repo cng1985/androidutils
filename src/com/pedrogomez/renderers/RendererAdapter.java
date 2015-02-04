@@ -27,12 +27,11 @@ import java.util.Collection;
  * to create new lists.
  * <p/>
  * This class is the heart of this library. It's used to avoid the library users declare a new
- * renderer each time they
- * have to implement a new ListView.
+ * renderer each time they have to implement a new ListView.
  * <p/>
  * RendererAdapter<T> has to be constructed with a LayoutInflater to inflate views, one
- * RendererBuilder to provide
- * Renderer to RendererAdapterdapter and one AdapteeCollection to provide the elements to render.
+ * RendererBuilder to provide Renderer to RendererAdapterdapter and one AdapteeCollection to
+ * provide the elements to render.
  *
  * @author Pedro Vicente Gómez Sánchez.
  */
@@ -49,27 +48,23 @@ public class RendererAdapter<T> extends BaseAdapter {
     this.collection = collection;
   }
 
-  @Override
-  public int getCount() {
+  @Override public int getCount() {
     return collection.size();
   }
 
-  @Override
-  public T getItem(int position) {
+  @Override public T getItem(int position) {
     return collection.get(position);
   }
 
-  @Override
-  public long getItemId(int position) {
+  @Override public long getItemId(int position) {
     return position;
   }
 
   /**
    * Main method of RendererAdapter. This method has the responsibility of update renderer builder
-   * values and create
-   * or recycle a new rendere. Once the renderer has been obtained the RendereBuilder will call the
-   * render method
-   * in the renderer and will return the renderer root view to the ListView.
+   * values and create or recycle a new rendere. Once the renderer has been obtained the
+   * RendereBuilder will call the render method in the renderer and will return the renderer root
+   * view to the ListView.
    * <p/>
    * If rendererBuilder returns a null renderer this method will throw a
    * NullRendererBuiltException.
@@ -79,8 +74,7 @@ public class RendererAdapter<T> extends BaseAdapter {
    * @param parent used to inflate views.
    * @return view rendered.
    */
-  @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  @Override public View getView(int position, View convertView, ViewGroup parent) {
     T content = getItem(position);
     rendererBuilder.withContent(content);
     rendererBuilder.withConvertView(convertView);
@@ -101,8 +95,7 @@ public class RendererAdapter<T> extends BaseAdapter {
    * @param position to analyze.
    * @return the id associated to the renderer used to render the content at position position.
    */
-  @Override
-  public int getItemViewType(int position) {
+  @Override public int getItemViewType(int position) {
     T content = getItem(position);
     return rendererBuilder.getItemViewType(content);
   }
@@ -112,8 +105,7 @@ public class RendererAdapter<T> extends BaseAdapter {
    *
    * @return amount of different renderers.
    */
-  @Override
-  public int getViewTypeCount() {
+  @Override public int getViewTypeCount() {
     return rendererBuilder.getViewTypeCount();
   }
 
@@ -154,6 +146,13 @@ public class RendererAdapter<T> extends BaseAdapter {
   }
 
   /**
+   * Remove all elements inside the AdapteeCollection.
+   */
+  public void clear() {
+    collection.clear();
+  }
+
+  /**
    * Allows the client code to access the AdapteeCollection<T> from subtypes of RendererAdapter.
    *
    * @return collection used in the adapter as the adaptee class.
@@ -166,8 +165,7 @@ public class RendererAdapter<T> extends BaseAdapter {
    * Empty implementation created to allow the client code to extend this class without override
    * getView method.
    * This method is called before render the renderer and can be used in RendererAdapter extension
-   * to add extra
-   * info to the renderer created.
+   * to add extra info to the renderer created.
    *
    * @param content to be rendered.
    * @param renderer to be used to paint the content.
